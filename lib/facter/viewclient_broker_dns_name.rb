@@ -14,9 +14,9 @@ Facter.add('viewclient_broker_dns_name') do
       require 'win32/registry'
 
       Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\VMware, Inc.\VMware VDM\Agent\Configuration') do |reg|
-        reg.each do |name,value,key|
+        reg.each_value do |name,type,data|
 		    if name =~ /Broker/
-            viewclient_broker_dns_name = value
+            viewclient_broker_dns_name = data
           end
         end
       end
