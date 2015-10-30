@@ -24,6 +24,20 @@ class vmware_horizon_view (
     $external_exclude_all_usb_devices = true,
     $internal_exclude_all_usb_devices = false,
   ) {
+
+    $script = 'C:\Program Files\VMware\VMware View\Agent\scripts\runpuppetagent.vbs'
+    # Configure Script to trigger the Puppet Agent
+    file { 'C:\Program Files\VMware\VMware View\Agent\scripts\runpuppetagent.vbs.erb':
+      content => template('vmware_horizon_view/runpuppetagent.vbs.erb'),
+    }
+
+    # Configure Registry Key to use the Script
+    registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession':
+        ensure => present,
+        type   => string,
+        data   => "wscript ${script}",
+      }
+
     # Check if user is connecting from external vdm broker.
     if $vdmstartsessionbrokerdnsname == $external_broker_dns_name {
       notify { 'User is connecting from external VDM Broker': }

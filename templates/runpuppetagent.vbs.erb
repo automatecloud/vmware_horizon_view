@@ -1,0 +1,2 @@
+Set oShell = WScript.CreateObject("WSCript.shell")
+oShell.run "puppet agent -t"
