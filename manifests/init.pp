@@ -32,7 +32,7 @@ class vmware_horizon_view (
     }
 
     # Configure Registry Key to use the Script
-    registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession':
+    registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession\Bullet1':
         ensure => present,
         type   => string,
         data   => "wscript ${script}",
