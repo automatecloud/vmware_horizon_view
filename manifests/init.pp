@@ -27,7 +27,7 @@ class vmware_horizon_view (
 
     $script = 'C:\Program Files\VMware\VMware View\Agent\scripts\runpuppetagent.vbs'
     # Configure Script to trigger the Puppet Agent
-    file { 'C:\Program Files\VMware\VMware View\Agent\scripts\runpuppetagent.vbs.erb':
+    file { 'C:\Program Files\VMware\VMware View\Agent\scripts\runpuppetagent.vbs':
       content => template('vmware_horizon_view/runpuppetagent.vbs.erb'),
     }
 
