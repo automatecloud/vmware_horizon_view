@@ -32,10 +32,15 @@ class vmware_horizon_view (
     }
 
     # Configure Registry Key to use the Script
+    registry_key { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession':
+        ensure => present,
+      }
+
     registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession\Bullet1':
         ensure => present,
         type   => string,
         data   => "wscript \"${script}\"",
+        require => Registry_key['HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession'],
       }
 
     # Check if user is connecting from external vdm broker.
