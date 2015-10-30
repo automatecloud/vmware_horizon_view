@@ -109,10 +109,19 @@ class vmware_horizon_view (
           type   => dword,
           data   => $external_set_audio_bandwidth_limit ,
       }
-      registry_value { 'HKLM\SOFTWARE\Policies\VMware, Inc.\VMware VDM\Agent\USB\ExcludeAllDevices':
-          ensure => present,
-          type   => string,
-          data   => $external_exclude_all_usb_devices ,
+      if $external_exclude_all_usb_devices {
+        registry_value { 'HKLM\SOFTWARE\Policies\VMware, Inc.\VMware VDM\Agent\USB\ExcludeAllDevices':
+            ensure => present,
+            type   => string,
+            data   => 'true',
+          }
+      }
+      else {
+        registry_value { 'HKLM\SOFTWARE\Policies\VMware, Inc.\VMware VDM\Agent\USB\ExcludeAllDevices':
+            ensure => present,
+            type   => string,
+            data   => 'false',
+          }
       }
     }
     # Check if user is connecting from internal vdm broker.
@@ -200,10 +209,19 @@ class vmware_horizon_view (
           type   => dword,
           data   => $internal_set_audio_bandwidth_limit ,
       }
-      registry_value { 'HKLM\SOFTWARE\Policies\VMware, Inc.\VMware VDM\Agent\USB\ExcludeAllDevices':
-          ensure => present,
-          type   => string,
-          data   => $internal_exclude_all_usb_devices ,
+      if $internal_exclude_all_usb_devices {
+        registry_value { 'HKLM\SOFTWARE\Policies\VMware, Inc.\VMware VDM\Agent\USB\ExcludeAllDevices':
+            ensure => present,
+            type   => string,
+            data   => 'true',
+          }
+      }
+      else {
+        registry_value { 'HKLM\SOFTWARE\Policies\VMware, Inc.\VMware VDM\Agent\USB\ExcludeAllDevices':
+            ensure => present,
+            type   => string,
+            data   => 'false',
+          }
       }
     }
     else {
