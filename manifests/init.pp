@@ -34,8 +34,7 @@ class vmware_horizon_view (
     # Configure Registry Key to use the Script
     registry_key { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession':
         ensure => present,
-      }
-
+    }
 
     registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession\Bullet1':
         ensure => present,
@@ -54,6 +53,11 @@ class vmware_horizon_view (
           ensure => present,
           type   => dword,
           data   => '0',
+    }
+
+    service {'WSSH':
+      ensure => 'running',
+      enable => true,
     }
 
     # Check if user is connecting from external vdm broker.
