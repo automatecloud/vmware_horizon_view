@@ -36,13 +36,20 @@ class vmware_horizon_view (
         ensure => present,
       }
 
+
     registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession\Bullet1':
         ensure => present,
         type   => string,
         data   => "wscript \"${script}\"",
         require => Registry_key['HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession'],
-      }
+    }
 
+    registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\Agent\Configuration\RunScriptsOnStartSession':
+          ensure => present,
+          type   => dword,
+          data   => true,
+    }
+    
     # Check if user is connecting from external vdm broker.
     if $vdmstartsessionbrokerdnsname == $external_broker_dns_name {
       notify { 'User is connecting from external VDM Broker': }
