@@ -47,9 +47,9 @@ class vmware_horizon_view (
     registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\Agent\Configuration\RunScriptsOnStartSession':
           ensure => present,
           type   => dword,
-          data   => true,
+          data   => '1',
     }
-    
+
     # Check if user is connecting from external vdm broker.
     if $vdmstartsessionbrokerdnsname == $external_broker_dns_name {
       notify { 'User is connecting from external VDM Broker': }
