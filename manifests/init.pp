@@ -50,6 +50,12 @@ class vmware_horizon_view (
           data   => '1',
     }
 
+    registry_value { 'HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\TimeoutsInMinutes':
+          ensure => present,
+          type   => dword,
+          data   => '0',
+    }
+
     # Check if user is connecting from external vdm broker.
     if $vdmstartsessionbrokerdnsname == $external_broker_dns_name {
       notify { 'User is connecting from external VDM Broker': }
