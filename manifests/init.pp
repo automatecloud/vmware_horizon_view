@@ -162,6 +162,7 @@ class vmware_horizon_view (
     }
     # Check if user is connecting from internal vdm broker.
     elsif $vdmstartsessionbrokerdnsname == $internal_broker_dns_name {
+      notify { 'User is connecting from internal VDM Broker': }
       if $internal_stop_tpservices == true {
         service {'TPAutoConnSvc':
           ensure => 'stopped',
