@@ -15,65 +15,91 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+This module manage the PCOIP settings within a VMware Horizon with View environment for internal and external connections. It is also known as the secret weapon.
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
+This module allows to configure different PCOIP settings for internal and externe VMware Horizon with View connections. The following settings can be changed:
+* Enable or Disable the ThinPrint Services (TPAutoConnSvc and TPVCGateway)
+* Enable or Disable the PCOIP Build to Lossless configuration
+* Configure the PCoIP minimum image quality
+* Configure the PCoIP maximum initial image quality
+* Configure the PCoIP maximum frame rate
+* Configure the PCoIP use image setting
+* Configure the PCoIP clipboard state
+* Configure the PCoIP audio bandwidth limit
+* Configure the Exclude all USB Devices setting.
 
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+It also automates the configuration necessary to enable the puppet run during each internal and external connection.
 
 ## Setup
 
 ### What vmware_horizon_view affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
+For more details please check the Blog https://blogs.vmware.com/consulting/2015/10/vmware-horizon-view-secret-weapon.html
 
 ### Setup Requirements **OPTIONAL**
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+It will configure the following:
+* Automates the Script creation at C:\Program Files\VMware\VMware View\Agent\scripts\runpuppetagent.vbs that will trigger a puppet agent -t run.
+* Automates the necessary Registy keys:
+**  HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession
+**  HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\StartSession\Bullet1 and value "wscript C:\Program Files\VMware\VMware View\Agent\scripts\runpuppetagent.vbs" (string)
+**  HKLM\SOFTWARE\VMware, Inc.\VMware VDM\Agent\Configuration\RunScriptsOnStartSession and value 1 (dword)
+**  HKLM\SOFTWARE\VMware, Inc.\VMware VDM\ScriptEvents\TimeoutsInMinutes and value 0 (dword)
+* enabling the Windows Script Host Service (WSSH)
 
 ### Beginning with vmware_horizon_view
 
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+You can use the init.pp module inside your VMware Horizon with View template to configure the setup requirements. It will configure the described configurations independent from the parameter configurations.
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+First you need to specify the external broker DNS name parameter (external_broker_dns_name) and internal broker DNS name parameter (internal_broker_dns_name)
 
-## Reference
+Beside that you can specify the following internal settings. If not specified the default values will be used.
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+You can specify the following settings for external connections:
+* Enable (true) or disable (false) the ThinPrint Services: external_stop_tpservices (default = true)
+* Enable (true) or disable (false) PCoIP  Build to Lossless: external_enable_build_to_lossless (default = true)
+* Configuration of the PCoIP minimum image quality: external_minimum_image_quality (default = 30)
+* Configuration of the PCoIP maximum initial image quality: external_maximum_initial_image_quality (default = 70)
+* Configuration of the PCoIP maximum frame rate: external_maximum_frame_rate (default = 12)
+* Configuration of the Use image setting enabled (true) or disabled (false): external_use_image_setting (default = true)
+* Configuration of the PCoIP clipboard state: external_enable_server_clipboard_state (default = false)
+* Configuration of the PCoIP audio bandwidth limit: external_set_audio_bandwidth_limit (default = 80)
+* Configuration of to enable or disable exclude all usb devices: external_exclude_all_usb_devices (default = true),
+
+You can specify the following settings for internal connections:
+* Enable (true) or disable (false) the ThinPrint Services: internal_stop_tpservices (default = false)
+* Enable (true) or disable (false) PCoIP  Build to Lossless: internal_enable_build_to_lossless (default = false)
+* Configuration of the PCoIP minimum image quality: internal_minimum_image_quality (default = 40)
+* Configuration of the PCoIP maximum initial image quality: internal_maximum_initial_image_quality (default = 80)
+* Configuration of the PCoIP maximum frame rate: internal_maximum_frame_rate (default = 20)
+* Configuration of the Use image setting enabled (true) or disabled (false): internal_use_image_setting (default = true)
+* Configuration of the PCoIP clipboard state: internal_enable_server_clipboard_state (default = true)
+* Configuration of the PCoIP audio bandwidth limit: internal_set_audio_bandwidth_limit (default = 250)
+* Configuration of to enable or disable exclude all usb devices: internal_exclude_all_usb_devices (default = false)
+
+The module also creates some custom facts for reporting:
+* horizon_view_pcoip_audio_bandwidth_limit: Information about the PCoIP audio bandwidth limit configuration before the puppet agent run.
+* horizon_view_pcoip_enable_build_to_lossless: Information about the PCoIP enable build to lossless configuration before the puppet agent run.
+* horizon_view_pcoip_maximum_frame_rate: Information about the PCoIP maximum frame rate configuration before the puppet agent run.
+* horizon_view_pcoip_maximum_initial_image_quality: Information about the PCoIP maximum initial image quality configuration before the puppet agent run.
+* horizon_view_pcoip_minimum_image_quality: Information about the PCoIP minimum image quality configuration before the puppet agent run.
+* horizon_view_pcoip_server_clipboard_state: Information about the PCoIP server clipboard state configuration before the puppet agent run.
+* horizon_view_pcoip_use_client_img_setting: Information about the PCoIP client img setting before the puppet agent run.
+* vdmstartsessionbrokerdnsname: Information about the vdmstartsessionbrokerdnsname before the puppet agent run.
+* viewclient_broker_dns_name: Information about the View Client broker DNS name of all VDM Brokers available within your
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+- Only works right now with one external and one internal VMware Horizon with View Desktop broker but can be extended to an array of possible broker names in future.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+For your ideas to extend the module please let me know your requests by creating issues at the github repository: https://github.com/Andulla/vmware_horizon_view/issues
 
 ## Release Notes/Contributors/Etc **Optional**
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+Version 0.0.1: Initial Release of the module
