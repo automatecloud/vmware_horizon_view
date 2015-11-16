@@ -3,12 +3,17 @@
   "version": "0.0.1",
   "author": "andulla",
   "summary": "Manage VMware Horizon View environment with Puppet",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "source": "https://github.com/Andulla/vmware_horizon_view",
   "project_page": "https://github.com/Andulla/vmware_horizon_view",
   "issues_url": "https://github.com/Andulla/vmware_horizon_view/issues",
+  "operatingsystem_support": [
+    {
+    "operatingsystem":"windows",
+    "operatingsystemrelease":[ "2008R2", "2012R2" ]
+    }
+   ],
   "dependencies": [
-    {"name":"puppetlabs-stdlib","version_requirement":">= 4.9.0"},
-    {"name":"puppetlabs-registry","version_requirement":">= 1.1.2"},
+    {"name":"puppetlabs-stdlib","version_requirement":">= 4.9.0 <6.0.0"}
   ]
 }
